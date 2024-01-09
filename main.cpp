@@ -6,27 +6,35 @@
     - Mudar tamanho da bola
     - Os pontos ganham hitbox e perdem pontos se acertados
     - Barrinha de duração
+- Menu de configurações
+    - adaptar jogo para resoluções maiores
+    - Configuração de resolução e janela
+- FPS adaptativo
+    - configurar delta time
 - sistema de angulo para colisão
-- reworkar para o wrapper de C++
 */
 #include <iostream>
 #include <raylib.h>
+#include <Player.hpp>
 
 using namespace std;
 
 int main () {
 
-    const int screenWidth = 854;
-    const int screenHeight = 480;
+    InitWindow(854, 480, "RayPong");
 
     Vector2 ball = {100, 100};
     int ballRadius = 15;
     // TODO Rework ballSpeed and its incrementation
     Vector2 ballSpeed = {5, 5};
 
-    Rectangle player1 = {15, screenHeight/2-100, 15, 100};
+    // TODO Transform into a Player class
+
+    Player Player1Obj(1);
+    Rectangle player1 = {15, GetScreenHeight()/2-50, 15, 100};
+    Vector2 centerPlayer1 = {player1.x + player1.width, player1.y + player1.height/2};
     int player1Score = 0;
-    Rectangle player2 = {screenWidth-30, screenHeight/2-100, 15, 100};
+    Rectangle player2 = {GetScreenWidth()-30, GetScreenHeight()/2-50, 15, 100};
     int player2Score = 0;
 
     int playerSpeed = 10;
@@ -36,10 +44,12 @@ int main () {
 
     float speedEffect = 0.1;
 
-    InitWindow(screenWidth, screenHeight, "Raypong");
+    SetConfigFlags(FLAG_MSAA_4X_HINT);
     SetTargetFPS(60);
 
     while (WindowShouldClose() == false){
+        centerPlayer1.x = player1.x + player1.width;
+        centerPlayer1.y = player1.y + player1.height/2;
 
         // Timer 1 second
         frame++;
@@ -59,13 +69,13 @@ int main () {
         // Ball collision
         // TODO turn this into a function
         // TODO Randomize respawn angle
-        if (ball.x + ballRadius >= screenWidth) {
+        if (ball.x + ballRadius >= GetScreenWidth()) {
             ballSpeed.x *= -1;
             player1Score++;
             ballSpeed.x = 5;
             ballSpeed.y = 5;
-            ball.x = screenWidth/4;
-            ball.y = screenHeight/2;
+            ball.x = GetScreenWidth()/4;
+            ball.y = GetScreenHeight()/2;
         }
 
         if (ball.x - ballRadius <= 0) {
@@ -73,11 +83,11 @@ int main () {
             player2Score++;
             ballSpeed.x = -5;
             ballSpeed.y = -5;
-            ball.x = screenWidth/4*3;
-            ball.y = screenHeight/2;
+            ball.x = GetScreenWidth()/4*3;
+            ball.y = GetScreenHeight()/2;
         }
 
-        if (ball.y + ballRadius >= screenHeight  || ball.y - ballRadius <= 0) {
+        if (ball.y + ballRadius >= GetScreenHeight()  || ball.y - ballRadius <= 0) {
             ballSpeed.y *= -1;
         }
 
@@ -93,7 +103,7 @@ int main () {
 
         }
 
-        if (!(player1.y >= screenHeight - player1.height)) {
+        if (!(player1.y >= GetScreenHeight() - player1.height)) {
             if (IsKeyDown(KEY_S)) player1.y += playerSpeed;
 
         }
@@ -103,7 +113,7 @@ int main () {
 
         }
 
-        if (!(player2.y >= screenHeight - player2.height)) {
+        if (!(player2.y >= GetScreenHeight() - player2.height)) {
             if (IsKeyDown(KEY_DOWN)) player2.y += playerSpeed;
         
         }
@@ -111,15 +121,39 @@ int main () {
         // Shape drawing
         BeginDrawing();
         ClearBackground(BLACK);
-        DrawRectangleRec(player1, WHITE);
+        //DrawRectangleRec(player1, WHITE);
+        DrawRectangleRec(Player1Obj.rectangle, WHITE);
         DrawRectangleRec(player2, WHITE);
-        DrawText(TextFormat("%d", player1Score), screenWidth/4, 40, 40, WHITE);
-        DrawText(TextFormat("%d", player2Score), screenWidth*3/4, 40, 40, WHITE);
-        DrawLine(screenWidth/2, 0, screenWidth/2, screenHeight, WHITE);
+        DrawText(TextFormat("%d", player1Score), GetScreenWidth()/4, 40, 40, WHITE);
+        DrawText(TextFormat("%d", player2Score), GetScreenWidth()*3/4, 40, 40, WHITE);
+        DrawLine(GetScreenWidth()/2, 0, GetScreenWidth()/2, GetScreenHeight(), WHITE);
         DrawCircle(ball.x,ball.y,ballRadius, WHITE);
+
+        // Degug stuff
+        DrawCircle(player1.x+player1.width, player1.y+player1.height/2, 3, RED);
+        DrawLine(0, GetScreenHeight()/2, GetScreenWidth(), GetScreenHeight()/2, RED);
+
         EndDrawing();
     }
 
     CloseWindow();
     return 0;
 }
+
+// void adjustRectangle(int shape, Rectangle player){
+//     switch(shape) {
+//     case 0:
+//         //? NORMAL SHAPE
+//         // code block
+//         break;
+//     case 1:
+//         //? LARGER SHAPE
+//         // code block
+//         break;
+//     case -1:
+//         //? SHORT SHAPE
+//         // code block
+//         break;
+//     default:
+//         // code block
+//     }}
