@@ -1,11 +1,17 @@
-/* 
+// * Developed by
+// * Yago Miguel Nunes (Notherman)
+// :3 Clarisse Rosseti (RezeScarlet)
+
+/*
 - Criar um menu com opções de pontuação para partidas
 - Power ups
     - Aumentar retangulo
-    - Mudar a cor do fundo do jogo
+    - Mudar a cor do fundo do jogo (epilepsicia)
     - Mudar tamanho da bola
     - Os pontos ganham hitbox e perdem pontos se acertados
     - Barrinha de duração
+// - Testar o wrapper de c++
+// - Player class and methods
 - Menu de configurações
     - adaptar jogo para resoluções maiores
     - Configuração de resolução e janela
@@ -13,125 +19,71 @@
     - configurar delta time
 - sistema de angulo para colisão
 */
+
 #include <iostream>
 #include <raylib.h>
 #include <Player.hpp>
+#include <Ball.hpp>
 
 using namespace std;
 
-int main () {
+int main()
+{
 
+    // Anti aliasing
+    SetConfigFlags(FLAG_MSAA_4X_HINT);
     InitWindow(854, 480, "RayPong");
+    SetTargetFPS(60);
 
-    Vector2 ball = {100, 100};
-    int ballRadius = 15;
-    // TODO Rework ballSpeed and its incrementation
-    Vector2 ballSpeed = {5, 5};
+    Ball ball;
 
-    // TODO Transform into a Player class
 
-    Player Player1Obj(1);
-    Rectangle player1 = {15, GetScreenHeight()/2-50, 15, 100};
-    Vector2 centerPlayer1 = {player1.x + player1.width, player1.y + player1.height/2};
-    int player1Score = 0;
-    Rectangle player2 = {GetScreenWidth()-30, GetScreenHeight()/2-50, 15, 100};
-    int player2Score = 0;
-
-    int playerSpeed = 10;
+    Player player1(1);
+    Player player2(2);
 
     int frame = 0;
     int seg = 0;
 
-    float speedEffect = 0.1;
-
-    SetConfigFlags(FLAG_MSAA_4X_HINT);
-    SetTargetFPS(60);
-
-    while (WindowShouldClose() == false){
-        centerPlayer1.x = player1.x + player1.width;
-        centerPlayer1.y = player1.y + player1.height/2;
+    while (WindowShouldClose() == false)
+    {
 
         // Timer 1 second
+        // TODO create a nice looking method for this (YAGo esta no esquema já (eu acho))
         frame++;
-        if(frame >= 60){
+        if (frame >= 60)
+        {
             seg++;
             frame = 0;
-            if (ballSpeed.x > 0) ballSpeed.x += speedEffect;
-            if (ballSpeed.y > 0) ballSpeed.y += speedEffect;
-            if (ballSpeed.x < 0) ballSpeed.x -= speedEffect;
-            if (ballSpeed.y < 0) ballSpeed.y -= speedEffect;
+            ball.Accelerate(0.1);
         }
 
-        // Ball moviment
-        ball.x += ballSpeed.x;
-        ball.y += ballSpeed.y;
+        ball.Collide(player1, player2);
 
-        // Ball collision
-        // TODO turn this into a function
-        // TODO Randomize respawn angle
-        if (ball.x + ballRadius >= GetScreenWidth()) {
-            ballSpeed.x *= -1;
-            player1Score++;
-            ballSpeed.x = 5;
-            ballSpeed.y = 5;
-            ball.x = GetScreenWidth()/4;
-            ball.y = GetScreenHeight()/2;
-        }
+        ball.Move();
 
-        if (ball.x - ballRadius <= 0) {
-            ballSpeed.x *= -1;
-            player2Score++;
-            ballSpeed.x = -5;
-            ballSpeed.y = -5;
-            ball.x = GetScreenWidth()/4*3;
-            ball.y = GetScreenHeight()/2;
-        }
-
-        if (ball.y + ballRadius >= GetScreenHeight()  || ball.y - ballRadius <= 0) {
-            ballSpeed.y *= -1;
-        }
-
-        if (CheckCollisionCircleRec(ball, ballRadius, player1) || CheckCollisionCircleRec(ball, ballRadius, player2)) {
-            ballSpeed.x *= -1;
-
-        }
-
-        // Player collision
-        // TODO turn this into a function
-        if (!(player1.y <= 0)) {
-            if (IsKeyDown(KEY_W)) player1.y -= playerSpeed;
-
-        }
-
-        if (!(player1.y >= GetScreenHeight() - player1.height)) {
-            if (IsKeyDown(KEY_S)) player1.y += playerSpeed;
-
-        }
-
-        if (!(player2.y <= 0)) {
-            if (IsKeyDown(KEY_UP)) player2.y -= playerSpeed;
-
-        }
-
-        if (!(player2.y >= GetScreenHeight() - player2.height)) {
-            if (IsKeyDown(KEY_DOWN)) player2.y += playerSpeed;
-        
-        }
+        // Player collision and Input
+        player1.Move(KeyboardKey(KEY_W), KeyboardKey(KEY_S));
+        player2.Move(KeyboardKey(KEY_UP), KeyboardKey(KEY_DOWN));
 
         // Shape drawing
         BeginDrawing();
-        ClearBackground(BLACK);
-        //DrawRectangleRec(player1, WHITE);
-        DrawRectangleRec(Player1Obj.rectangle, WHITE);
-        DrawRectangleRec(player2, WHITE);
-        DrawText(TextFormat("%d", player1Score), GetScreenWidth()/4, 40, 40, WHITE);
-        DrawText(TextFormat("%d", player2Score), GetScreenWidth()*3/4, 40, 40, WHITE);
-        DrawLine(GetScreenWidth()/2, 0, GetScreenWidth()/2, GetScreenHeight(), WHITE);
-        DrawCircle(ball.x,ball.y,ballRadius, WHITE);
 
-        // Degug stuff
-        DrawCircle(player1.x+player1.width, player1.y+player1.height/2, 3, RED);
-        DrawLine(0, GetScreenHeight()/2, GetScreenWidth(), GetScreenHeight()/2, RED);
+        ClearBackground(PINK);
+
+        DrawRectangleRec(player1.rect, WHITE);
+        DrawRectangleRec(player2.rect, WHITE);
+
+        DrawText(TextFormat("%d", player1.score), GetScreenWidth() / 4, 40, 40, WHITE);
+        DrawText(TextFormat("%d", player2.score), GetScreenWidth() * 3 / 4, 40, 40, WHITE);
+
+        DrawLine(GetScreenWidth() / 2, 0, GetScreenWidth() / 2, GetScreenHeight(), WHITE);
+
+        DrawCircle(ball.GetX(), ball.GetY(), ball.radius, WHITE);
+
+        // Debug stuff
+        DrawCircleV(player1.center, 3, RED);
+        DrawCircleV(player2.center, 3, RED);
+        DrawLine(0, GetScreenHeight() / 2, GetScreenWidth(), GetScreenHeight() / 2, RED);
 
         EndDrawing();
     }
@@ -139,21 +91,3 @@ int main () {
     CloseWindow();
     return 0;
 }
-
-// void adjustRectangle(int shape, Rectangle player){
-//     switch(shape) {
-//     case 0:
-//         //? NORMAL SHAPE
-//         // code block
-//         break;
-//     case 1:
-//         //? LARGER SHAPE
-//         // code block
-//         break;
-//     case -1:
-//         //? SHORT SHAPE
-//         // code block
-//         break;
-//     default:
-//         // code block
-//     }}
