@@ -33,7 +33,7 @@
 using namespace std;
 
 int main() {
-
+ 
     // Anti aliasing
     SetConfigFlags(FLAG_MSAA_4X_HINT);
     InitWindow(854, 480, "RayPong");
