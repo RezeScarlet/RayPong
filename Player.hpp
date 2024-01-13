@@ -1,11 +1,12 @@
-#include <raylib.h>
-
 class Player {
+private:
+    Screen screen;
 public:
     Rectangle rect;
     int speed;
     Vector2 center;
-    int score;
+    int score = 0;
+    float size;
     // TODO Make size variable based on screen size
 
     // Constructor
@@ -23,7 +24,7 @@ public:
     int getHeight();
     int getWidth();
     // TODO height width setters
-
+    
 
 };
 
@@ -34,7 +35,7 @@ void Player::Move(KeyboardKey upKey, KeyboardKey downKey) {
 
     }
 
-    if (!(rect.y >= GetScreenHeight() - rect.height)) {
+    if (!(rect.y >= screen.h - rect.height)) {
         if (IsKeyDown(downKey)) rect.y += speed;
 
     }
@@ -45,19 +46,23 @@ void Player::Move(KeyboardKey upKey, KeyboardKey downKey) {
 // Constructor
 Player::Player(int number){
     // There are only 2 possible players
+    this -> size = screen.h/5;
+    this -> speed = 10;
+    this -> rect = {0, screen.h/2-size/2, screen.w/57, size};
+    this -> center.y = rect.y + rect.height/2;
+
     switch (number) {
     case 1:
-        this -> rect = {15, (float)GetScreenHeight()/2-50, 15, 100};
-        this -> center = {rect.x + rect.width, rect.y + rect.height/2};
+        rect.x = rect.width;
+        center.x = rect.x + rect.width;
+
         break;
     case 2:
-        this -> rect = {(float)GetScreenWidth()-30, (float)GetScreenHeight()/2-50, 15, 100};
-        this -> center = {rect.x, rect.y + rect.height/2};
+        rect.x = screen.w-rect.width*2;
+        center.x = rect.x;
 
-    default:
         break;
     }
-    this -> speed = 10;
 }
 
 // X Y setter getters to remove the rect from position related stuff

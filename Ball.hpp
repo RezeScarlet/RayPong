@@ -1,17 +1,16 @@
 class Ball {
+private:
+    Screen screen;
 
 public:
-    Vector2 position = {(float)GetScreenWidth()/2, (float)GetScreenHeight()/2};
+    Vector2 position = {(float)screen.w/2, (float)screen.h/2};
     
     // When one of the coordenates is 0 the ball goes straight
     // So the bigger the X coordenate straigter it goes
     // if the ball hits the center of the player y speed should be 0 (straight foward)
     // ? if the ball hits the extreme end it should be?
     Vector2 direction = {-5, -5};
-    int radius = 15;
-
-    // Constructor
-    Ball();
+    int radius = (screen.w + screen.h) / 100 ;
 
     void Move();
 
@@ -26,11 +25,6 @@ public:
     int GetY();
 
 };
-
-// Constructor
-// Change to singleton in the future if needed
-Ball::Ball() {
-}
 
 inline void Ball::Move() {
     position.x += direction.x;
@@ -49,13 +43,13 @@ inline void Ball::Accelerate(float acceleration) {
 }
 
 inline void Ball::Collide(Player player1, Player player2) {
-    if (position.x + radius >= GetScreenWidth()) {
+    if (position.x + radius >= screen.w) {
         direction.x *= -1;
         player1.score++;
         direction.x = 5;
         direction.x = 5;
-        position.x = GetScreenWidth() / 4;
-        position.y = GetScreenHeight() / 2;
+        position.x = screen.w / 4;
+        position.y = screen.h / 2;
     }
 
     if (position.x - radius <= 0) {
@@ -63,11 +57,11 @@ inline void Ball::Collide(Player player1, Player player2) {
         player2.score++;
         direction.x = -5;
         direction.x = -5;
-        position.x = (float)GetScreenWidth() / 4 * 3;
-        position.y = (float)GetScreenHeight() / 2;
+        position.x = (float)screen.w / 4 * 3;
+        position.y = (float)screen.h / 2;
     }
 
-    if (position.y + radius >= GetScreenHeight() || position.y - radius <= 0) {
+    if (position.y + radius >= screen.h || position.y - radius <= 0) {
         direction.y *= -1;
     }
 

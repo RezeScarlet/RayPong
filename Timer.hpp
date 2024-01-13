@@ -1,7 +1,3 @@
-#include <iostream>
-#include <string>
-#include <raylib.h>
-
 // ! Comenta o codigo Yagoooo
 class Timer{
 

@@ -21,22 +21,27 @@
 */
 
 #include <iostream>
+#include <string>
 #include <raylib.h>
-#include <Player.hpp>
-#include <Ball.hpp>
+#include <raymath.h>
+#include "Screen.hpp"
+#include "Player.hpp"
+#include "Ball.hpp"
+#include "PowerUp.hpp"
+#include "Timer.hpp"
 
 using namespace std;
 
-int main()
-{
+int main() {
 
     // Anti aliasing
     SetConfigFlags(FLAG_MSAA_4X_HINT);
     InitWindow(854, 480, "RayPong");
     SetTargetFPS(60);
 
-    Ball ball;
+    Screen screen;
 
+    Ball ball;
 
     Player player1(1);
     Player player2(2);
@@ -44,14 +49,15 @@ int main()
     int frame = 0;
     int seg = 0;
 
+    PowerUp triangle;
+
     while (WindowShouldClose() == false)
     {
 
         // Timer 1 second
         // TODO create a nice looking method for this (YAGo esta no esquema já (eu acho))
         frame++;
-        if (frame >= 60)
-        {
+        if (frame >= 60) {
             seg++;
             frame = 0;
             ball.Accelerate(0.1);
@@ -68,22 +74,29 @@ int main()
         // Shape drawing
         BeginDrawing();
 
-        ClearBackground(PINK);
+        ClearBackground(BLACK);
 
         DrawRectangleRec(player1.rect, WHITE);
         DrawRectangleRec(player2.rect, WHITE);
 
-        DrawText(TextFormat("%d", player1.score), GetScreenWidth() / 4, 40, 40, WHITE);
-        DrawText(TextFormat("%d", player2.score), GetScreenWidth() * 3 / 4, 40, 40, WHITE);
+        DrawText(TextFormat("%d", player1.score), screen.w / 4, 40, 40, WHITE);
+        DrawText(TextFormat("%d", player2.score), screen.w * 3 / 4, 40, 40, WHITE);
 
-        DrawLine(GetScreenWidth() / 2, 0, GetScreenWidth() / 2, GetScreenHeight(), WHITE);
+        DrawLine(screen.w / 2, 0, screen.w / 2, screen.h, WHITE);
 
         DrawCircle(ball.GetX(), ball.GetY(), ball.radius, WHITE);
+    
+        DrawTriangle(triangle.v1, triangle.v2, triangle.v3, WHITE);
 
         // Debug stuff
         DrawCircleV(player1.center, 3, RED);
         DrawCircleV(player2.center, 3, RED);
-        DrawLine(0, GetScreenHeight() / 2, GetScreenWidth(), GetScreenHeight() / 2, RED);
+        DrawCircleV(triangle.position, 3, RED);
+        DrawCircleV(triangle.v1, 3, GREEN);
+        DrawCircleV(triangle.v2, 3, BLUE);
+        DrawCircleV(triangle.v3, 3, PURPLE);
+
+        DrawLine(0, screen.h / 2, screen.w, screen.h / 2, RED);
 
         EndDrawing();
     }
