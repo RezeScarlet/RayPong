@@ -20,12 +20,10 @@
 - sistema de angulo para colisão
 */
 
-#include <iostream>
-#include <string>
-#include <raylib.h>
-#include <raymath.h>
-#include "Screen.hpp"
-#include "Player.hpp"
+//#include <raylib.h>
+//#include <raymath.h>
+//#include "Screen.hpp"
+//#include "Player.hpp"
 #include "Ball.hpp"
 #include "PowerUp.hpp"
 #include "Timer.hpp"

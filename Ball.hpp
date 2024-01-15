@@ -1,3 +1,5 @@
+#include <raylib.h>
+#include "Player.hpp"
 class Ball {
 private:
     Screen screen;
@@ -85,5 +87,3 @@ inline int Ball::GetX() {
 inline int Ball::GetY() {
     return position.y;
 }
-
-

@@ -1,3 +1,6 @@
+#include <raylib.h>
+#include <raymath.h>
+
 class PowerUp {
 public:
 

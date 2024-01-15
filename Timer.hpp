@@ -1,3 +1,5 @@
+#include <raylib.h>
+#include <string>
 // ! Comenta o codigo Yagoooo
 class Timer{
 
@@ -17,16 +19,13 @@ public:
     std::string toString();
 };
 
-Timer::Timer(){
+inline Timer::Timer(){
     frame = 0;
     sec = 0;
     min = 0;
 }
 
-Timer::~Timer(){
-}
-
-void Timer::startTimer(int FPS){
+inline void Timer::startTimer(int FPS){
     if(!stop){
         frame++;
         if(frame >= FPS){
@@ -40,17 +39,17 @@ void Timer::startTimer(int FPS){
     }
 }
 
-void Timer::stopTimer(bool stop){
+inline void Timer::stopTimer(bool stop){
     this->stop = stop;
 }
 
-void Timer::resetTimer(bool reset){
+inline void Timer::resetTimer(bool reset){
     frame = 0;
     sec = 0;
     min = 0;
 }
 
-std::string Timer::toString(){
+inline std::string Timer::toString(){
     std::string sFrame = std::to_string(frame);
     std::string sSeg = std::to_string(sec);
     std::string sMin = std::to_string(min);

@@ -1,3 +1,6 @@
+#include <raylib.h>
+#include "Screen.hpp"
+
 class Player {
 private:
     Screen screen;
@@ -29,7 +32,7 @@ public:
 };
 
 // Player input and collision 
-void Player::Move(KeyboardKey upKey, KeyboardKey downKey) {
+inline void Player::Move(KeyboardKey upKey, KeyboardKey downKey) {
     if (!(rect.y <= 0)) {
         if (IsKeyDown(upKey)) rect.y -= speed;
 
@@ -44,7 +47,7 @@ void Player::Move(KeyboardKey upKey, KeyboardKey downKey) {
 }
 
 // Constructor
-Player::Player(int number){
+inline Player::Player(int number){
     // There are only 2 possible players
     this -> size = screen.h/5;
     this -> speed = 10;
