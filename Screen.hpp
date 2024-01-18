@@ -1,3 +1,4 @@
+#include <raylib.h>
 class Screen {
 public:
     static float h;

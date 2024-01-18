@@ -1,4 +1,3 @@
-#include <raylib.h>
 #include "Player.hpp"
 class Ball {
 private:
@@ -6,6 +5,7 @@ private:
 
 public:
     Vector2 position = {(float)screen.w/2, (float)screen.h/2};
+    Player lastTouch;
     
     // When one of the coordenates is 0 the ball goes straight
     // So the bigger the X coordenate straigter it goes
@@ -67,8 +67,14 @@ inline void Ball::Collide(Player player1, Player player2) {
         direction.y *= -1;
     }
 
-    if (CheckCollisionCircleRec(position, radius, player1.rect) || CheckCollisionCircleRec(position, radius, player2.rect)) {
+    if (CheckCollisionCircleRec(position, radius, player1.rect)) {
         direction.x *= -1;
+        lastTouch = player1;
+    }
+    if (CheckCollisionCircleRec(position, radius, player2.rect)) {
+        direction.x *= -1;
+        lastTouch = player2;
+
     }
 }
 

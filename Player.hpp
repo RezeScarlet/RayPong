@@ -1,8 +1,5 @@
-#include <raylib.h>
 #include "Screen.hpp"
-
-class Player {
-private:
+class Player { private:
     Screen screen;
 public:
     Rectangle rect;
