@@ -1,8 +1,5 @@
-#include <raylib.h>
 #include "Screen.hpp"
-
-class Player {
-private:
+class Player { private:
     Screen screen;
 public:
     Rectangle rect;
@@ -14,6 +11,7 @@ public:
 
     // Constructor
     Player(int number);
+    Player();
 
     // Player Movement
     void Move(KeyboardKey upKey, KeyboardKey downKey);
@@ -67,6 +65,7 @@ inline Player::Player(int number){
         break;
     }
 }
+inline Player::Player(){}
 
 // X Y setter getters to remove the rect from position related stuff
 inline int Player::getX() {
