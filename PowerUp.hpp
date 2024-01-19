@@ -3,11 +3,11 @@
 class PowerUp {
 private:
     Screen screen;
-    float width = (screen.w + screen.h) / 100;
+    float width = (screen.w + screen.h) / 50;
     float height = ((float)sqrt(3) / 2) * width;
 
 public:
-    bool visible = true;
+    bool visible = false;
 
     // receives the triangle coordenate and create the three vector
     Vector2 position = {(float)GetScreenWidth() / 2 + width, (float)GetScreenHeight() / 2};
@@ -36,5 +36,9 @@ inline void PowerUp::Collide (Ball ball) {
 inline void PowerUp::Respawn() {
     // Set position and vectors
     visible = true;
+    position = {(float)GetRandomValue(screen.w/6, screen.w/6*5), (float)GetRandomValue(0, screen.h)};
+    v1 = {position.x, position.y - height};
+    v2 = {position.x - width/2, position.y};
+    v3 = {position.x + width/2, position.y};
     // Turn on collision
 }

@@ -26,36 +26,26 @@
 using namespace std;
 
 int main() {
- 
+
     // Anti aliasing
     SetConfigFlags(FLAG_MSAA_4X_HINT);
     InitWindow(854, 480, "RayPong");
     SetTargetFPS(60);
 
     Screen screen;
-
+    Timer timer;
     Player player1(1);
     Player player2(2);
 
     Ball ball(player1);
 
-    int frame = 0;
-    int seg = 0;
-
     PowerUp powerUp;
 
-    while (WindowShouldClose() == false)
-    {
-
-        // Timer 1 second
-        // TODO create a nice looking method for this (YAGo esta no esquema já (eu acho))
-        frame++;
-        if (frame >= 60) {
-            seg++;
-            frame = 0;
+    while (WindowShouldClose() == false) {
+        timer.RunTimer(GetFPS());
+        if (timer.getFrame() == 60) {
             ball.Accelerate(0.1);
         }
-
 
         ball.Collide(player1, player2);
 
@@ -72,8 +62,8 @@ int main() {
             powerUp.Collide(ball);
             DrawTriangle(powerUp.v1, powerUp.v2, powerUp.v3, WHITE);
 
-        } else {
-            
+        } else if (timer.getSec() % 5 == 0){
+            powerUp.Respawn();
         }
 
         ClearBackground(BLACK);

@@ -6,9 +6,9 @@ public:
   void UpdateResolution();
   Screen();
 };
-
-// float Screen::h;
-// float Screen::w;
+// Needs this to compile on Windows (I don't know the fuck why)
+float Screen::h = GetScreenHeight();
+float Screen::w = GetScreenWidth();
 
 inline void Screen::UpdateResolution() {
   h = GetScreenHeight();

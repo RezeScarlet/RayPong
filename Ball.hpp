@@ -20,7 +20,7 @@ public:
 
   void Accelerate(float acceleration);
 
-  void Collide(Player player1, Player player2);
+  void Collide(Player &player1, Player &player2);
 
   // Setter/Getters
   void SetX(int X);
@@ -49,7 +49,7 @@ inline void Ball::Accelerate(float acceleration) {
     direction.y -= acceleration;
 }
 
-inline void Ball::Collide(Player player1, Player player2) {
+inline void Ball::Collide(Player &player1, Player &player2) {
   if (position.x + radius >= screen.w) {
     direction.x *= -1;
     player1.score++;

@@ -5,18 +5,21 @@ class Timer{
 
 private:
     int frame;
-
-    bool stop;
-public:
     int sec;
     int min;
 
+    bool stop;
+public:
+    
     Timer();
-    ~Timer();
-    void startTimer(int FPS);
+    void RunTimer(int FPS);
     void stopTimer(bool stop);
     void resetTimer(bool reset);
     std::string toString();
+
+    int getFrame();
+    int getSec();
+    int getMin();
 };
 
 inline Timer::Timer(){
@@ -25,7 +28,7 @@ inline Timer::Timer(){
     min = 0;
 }
 
-inline void Timer::startTimer(int FPS){
+inline void Timer::RunTimer(int FPS){
     if(!stop){
         frame++;
         if(frame >= FPS){
@@ -55,4 +58,16 @@ inline std::string Timer::toString(){
     std::string sMin = std::to_string(min);
     std::string finalString = TextFormat("Min: %d\nSec: %d\nFrame: %d\n", min, sec, frame);
     return finalString;
+}
+
+inline int Timer::getFrame() {
+    return frame;
+}
+
+inline int Timer::getSec() {
+    return sec;
+}
+
+inline int Timer::getMin() {
+    return min;
 }
