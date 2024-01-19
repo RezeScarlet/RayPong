@@ -1,4 +1,6 @@
 // ! Comenta o codigo Yagoooo
+#include <raylib.h>
+#include <string>
 class Timer{
 
 private:

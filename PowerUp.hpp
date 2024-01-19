@@ -3,8 +3,8 @@
 class PowerUp {
 private:
     Screen screen;
-    int width = (screen.w + screen.h) / 100;
-    int height = ((float)sqrt(3) / 2) * width;
+    float width = (screen.w + screen.h) / 100;
+    float height = ((float)sqrt(3) / 2) * width;
 
 public:
     bool visible = true;
@@ -19,7 +19,7 @@ public:
     void Respawn();
 };
 
-void PowerUp::Collide (Ball ball) {
+inline void PowerUp::Collide (Ball ball) {
     if (CheckCollisionPointCircle(v1, ball.position, ball.radius) || CheckCollisionPointCircle(v2, ball.position, ball.radius) || CheckCollisionPointCircle(v3, ball.position, ball.radius)) {
 
     // Make itself invisible and turn off collision
@@ -33,7 +33,7 @@ void PowerUp::Collide (Ball ball) {
     // Start timer to spawn again
 }
 
-void Respawn() {
+inline void PowerUp::Respawn() {
     // Set position and vectors
     visible = true;
     // Turn on collision

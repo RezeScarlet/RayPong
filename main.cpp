@@ -19,8 +19,6 @@
     - configurar delta time
 - sistema de angulo para colisão
 */
-#include <iostream>
-#include <string>
 #include "PowerUp.hpp"
 #include "Timer.hpp"
 
@@ -36,10 +34,10 @@ int main() {
 
     Screen screen;
 
-    Ball ball;
-
     Player player1(1);
     Player player2(2);
+
+    Ball ball(player1);
 
     int frame = 0;
     int seg = 0;
