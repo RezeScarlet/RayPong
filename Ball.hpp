@@ -1,4 +1,7 @@
 #include "Player.hpp"
+#include <raymath.h>
+#include <iostream>
+
 class Ball {
 private:
   Screen screen;
@@ -7,10 +10,7 @@ public:
   Vector2 position = {(float)screen.w / 2, (float)screen.h / 2};
   Player lastTouch;
 
-  // When one of the coordenates is 0 the ball goes straight
-  // So the bigger the X coordenate straigter it goes
-  // if the ball hits the center of the player y speed should be 0 (straight
-  // foward) ? if the ball hits the extreme end it should be?
+  float speed = 8;
   Vector2 direction = {-5, -5};
   int radius = (screen.w + screen.h) / 100;
 
@@ -21,6 +21,7 @@ public:
   void Accelerate(float acceleration);
 
   void Collide(Player &player1, Player &player2);
+  void CollideWithPlayer(float reflectTo, Player &player);
 
   // Setter/Getters
   void SetX(int X);
@@ -34,51 +35,48 @@ inline Ball::Ball(Player lastTouch) {
 }
 
 inline void Ball::Move() {
-  position.x += direction.x;
-  position.y += direction.y;
+  position = Vector2Add(position, Vector2Scale(Vector2Normalize(direction), speed));
 }
 
 inline void Ball::Accelerate(float acceleration) {
-  if (direction.x > 0)
-    direction.x += acceleration;
-  if (direction.y > 0)
-    direction.y += acceleration;
-  if (direction.x < 0)
-    direction.x -= acceleration;
-  if (direction.y < 0)
-    direction.y -= acceleration;
+  speed += acceleration;  
 }
 
+// TODO Rework this function
 inline void Ball::Collide(Player &player1, Player &player2) {
   if (position.x + radius >= screen.w) {
-    direction.x *= -1;
     player1.score++;
-    direction.x = 5;
-    direction.x = 5;
-    position.x = screen.w / 4;
-    position.y = screen.h / 2;
+    direction = {5, (float)GetRandomValue(-5, 5)};
+    position = {(float)screen.w / 4, (float)screen.h / 2};
   }
 
   if (position.x - radius <= 0) {
-    direction.x *= -1;
     player2.score++;
-    direction.x = -5;
-    direction.x = -5;
-    position.x = (float)screen.w / 4 * 3;
-    position.y = (float)screen.h / 2;
+    direction = {-5, (float)GetRandomValue(-5, 5)};
+    position = {(float)screen.w / 4 * 3, (float)screen.h / 2};
   }
 
   if (position.y + radius >= screen.h || position.y - radius <= 0) {
     direction.y *= -1;
   }
+  
+  CollideWithPlayer(1, player1);
+  CollideWithPlayer(-1, player2);
+}
 
-  if (CheckCollisionCircleRec(position, radius, player1.rect)) {
-    direction.x *= -1;
-    lastTouch = player1;
-  }
-  if (CheckCollisionCircleRec(position, radius, player2.rect)) {
-    direction.x *= -1;
-    lastTouch = player2;
+inline void Ball::CollideWithPlayer(float reflectTo, Player &player) {
+  if (CheckCollisionCircleRec(position, radius, player.rect)) {
+    // Lerp between the two vector to make ball reflect in the correct angle
+    // It does it by remaping the distance(can be negative) between the ball and center of the player to a value from 0 to 1  
+    direction = Vector2Lerp({reflectTo, -1}, {reflectTo, 1}, Remap(position.y - player.getY() - player.getHeight()/2 , -player.getHeight()/2, player.getHeight()/2, 0, 1));
+    
+    // This calc is kinda wierd, so i'll be leaving these debug couts were
+    // std::cout << "player height: " << player.getHeight() << '\n';
+    // std::cout << "input: " << position.y - player.getY() - player.getHeight()/2 << "\nStart: " << -player.getHeight()/2 - radius << "\nEnd: " << player.getHeight()/2 + radius<< '\n';
+    // std::cout << "Remap: " << Remap(position.y - player.getY() - player.getHeight()/2, -player.getHeight()/2, player.getHeight()/2, 0, 1) << '\n';
+    lastTouch = player;
+    direction = Vector2Multiply(Vector2Normalize(direction), {speed, speed});
+  
   }
 }
 

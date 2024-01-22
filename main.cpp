@@ -3,21 +3,19 @@
 // :3 Clarisse Rosseti (RezeScarlet)
 
 /*
-- Criar um menu com opções de pontuação para partidas
+- Menu 
+    - configurações
+    - adaptar jogo para resoluções maiores
+    - Configuração de resolução e janela
+    - Criar um menu com opções de pontuação para partidas
 - Power ups
     - Aumentar retangulo
     - Mudar a cor do fundo do jogo (epilepsicia)
     - Mudar tamanho da bola
     - Os pontos ganham hitbox e perdem pontos se acertados
     - Barrinha de duração
-// - Testar o wrapper de c++
-// - Player class and methods
-- Menu de configurações
-    - adaptar jogo para resoluções maiores
-    - Configuração de resolução e janela
 - FPS adaptativo
     - configurar delta time
-- sistema de angulo para colisão
 */
 #include "PowerUp.hpp"
 #include "Timer.hpp"
@@ -36,26 +34,22 @@ int main() {
     Timer timer;
     Player player1(1);
     Player player2(2);
-
     Ball ball(player1);
-
     PowerUp powerUp;
 
     while (WindowShouldClose() == false) {
+        
         timer.RunTimer(GetFPS());
         if (timer.getFrame() == 60) {
             ball.Accelerate(0.1);
         }
 
         ball.Collide(player1, player2);
-
         ball.Move();
 
-        // Player collision and Input
         player1.Move(KeyboardKey(KEY_W), KeyboardKey(KEY_S));
         player2.Move(KeyboardKey(KEY_UP), KeyboardKey(KEY_DOWN));
 
-        // Shape drawing
         BeginDrawing();
 
         if (powerUp.visible) {
@@ -77,16 +71,14 @@ int main() {
         DrawLine(screen.w / 2, 0, screen.w / 2, screen.h, WHITE);
 
         DrawCircle(ball.GetX(), ball.GetY(), ball.radius, WHITE);
-    
 
         // Debug stuff
         DrawCircleV(player1.center, 3, RED);
         DrawCircleV(player2.center, 3, RED);
-        DrawCircleV(powerUp.position, 3, RED);
-        DrawCircleV(powerUp.v1, 3, GREEN);
-        DrawCircleV(powerUp.v2, 3, BLUE);
-        DrawCircleV(powerUp.v3, 3, PURPLE);
-
+        // DrawCircleV(powerUp.position, 3, RED);
+        // DrawCircleV(powerUp.v1, 3, GREEN);
+        // DrawCircleV(powerUp.v2, 3, BLUE);
+        // DrawCircleV(powerUp.v3, 3, PURPLE);
         DrawLine(0, screen.h / 2, screen.w, screen.h / 2, RED);
 
         EndDrawing();

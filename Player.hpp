@@ -1,4 +1,5 @@
 #include "Screen.hpp"
+
 class Player { private:
     Screen screen;
 public:
