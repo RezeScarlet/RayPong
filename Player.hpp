@@ -25,6 +25,7 @@ public:
 
     int getHeight();
     int getWidth();
+    void setHeight(float height);
     // TODO height width setters
     
 
@@ -90,3 +91,9 @@ inline int Player::getHeight() {
 inline int Player::getWidth() {
     return rect.width;
 }
+
+inline void Player::setHeight(float height) {
+    rect.height = height;
+
+}
+

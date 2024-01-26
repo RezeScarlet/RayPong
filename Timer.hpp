@@ -10,7 +10,7 @@ private:
 
     bool stop;
 public:
-    
+    // TODO make restartable timer    
     Timer();
     void RunTimer(int FPS);
     void stopTimer(bool stop);
@@ -43,7 +43,7 @@ inline void Timer::RunTimer(int FPS){
 }
 
 inline void Timer::stopTimer(bool stop){
-    this->stop = stop;
+    this -> stop = stop;
 }
 
 inline void Timer::resetTimer(bool reset){

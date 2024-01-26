@@ -27,7 +27,27 @@ inline void PowerUp::Collide (Ball ball) {
     v2 = Vector2Zero();
     v3 = Vector2Zero();
     visible = false;
+
     // Start powerup effect
+    // todo make duration bar
+    /*
+    PowerUps chance table
+    - Player bigger
+    - player smaller
+    - color (correct player color)
+        - normal color
+        - rainbow
+    - Ball bigger
+    - ball smaller
+    - ball speed
+    - ball slower
+    - Multi Balls
+    */
+    int effect = GetRandomValue(1, 100);
+    if (effect < 100) {
+        ball.lastTouch.setHeight(300);
+    }
+
     }
 
     // Start timer to spawn again
@@ -36,7 +56,7 @@ inline void PowerUp::Collide (Ball ball) {
 inline void PowerUp::Respawn() {
     // Set position and vectors
     visible = true;
-    position = {(float)GetRandomValue(screen.w/6, screen.w/6*5), (float)GetRandomValue(0, screen.h)};
+    position = {(float)GetRandomValue(screen.w/6, screen.w/6*5), (float)GetRandomValue(0 + height, screen.h)};
     v1 = {position.x, position.y - height};
     v2 = {position.x - width/2, position.y};
     v3 = {position.x + width/2, position.y};
